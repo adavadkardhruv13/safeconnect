@@ -9,7 +9,7 @@ from dotenv import dotenv_values
 from models.db_utils import *
 from fastapi.responses import JSONResponse
 from models.models import VehicleType, VehicleBrand
-from qrcode import make as make_qr_code
+from qrcode import QRCode, constants
 from PIL import Image
 import cloudinary.uploader
 from io import BytesIO
@@ -58,25 +58,46 @@ async def post_vehicle_data(
             
             #generate QRCODE
             qr_data = f"https://safeconnect-e81248c2d86f.herokuapp.com/vehicle/get_vehicle_data/{vehicle_no}"
-            qr_code = make_qr_code(qr_data)
-            qr_code_image = qr_code.get_image()
+            qr = QRCode(
+            version=1,
+            error_correction=constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+            qr.add_data(qr_data)
+            qr.make(fit=True)
+            qr_code_image = qr.make_image(fill_color="black", back_color="white")
             #qr_code_image.save(f"qr_codes/{vehicle_no}.png")
             
-            qr_code_stream = BytesIO()
-            qr_code_image.save(qr_code_stream, format="PNG")  # Save the image to the byte stream
-            qr_code_stream.seek(0)
+            logo_path = "https://res.cloudinary.com/dowpys11p/image/upload/v1712820997/SafeConnect_kdztfd.png"  # Specify the path to your logo image
+            logo_image = Image.open(logo_path)
+            logo_size = (qr_code_image.size[0] // 4, qr_code_image.size[1] // 4)  # Resize logo to 1/4 of QR code size
+            logo_image = logo_image.resize(logo_size)
             
-            # Upload QR code image to Cloudinary
+            q# Calculate the position to paste the logo at the center
+            logo_position = (
+            (qr_code_image.size[0] - logo_image.size[0]) // 2,
+            (qr_code_image.size[1] - logo_image.size[1]) // 2,
+        )
+        
+        # Paste the logo onto the QR code image
+            qr_code_image.paste(logo_image, logo_position)
+
+        # Save the QR code image to a BytesIO stream
+            qr_code_stream = BytesIO()
+            qr_code_image.save(qr_code_stream, format="PNG")
+            qr_code_stream.seek(0)
+        
+        # Upload QR code image to Cloudinary
             upload_result = cloudinary.uploader.upload(qr_code_stream, 
                                                    folder="qr_codes", 
                                                    public_id=f"{vehicle_no}_qr_code")
-            
             qr_code_url = upload_result["secure_url"]
             
             await connection.execute(
             """
             UPDATE vehicle_registration_data
-            SET qrcode_url = $1
+            SET qrcode_url = $1 
             WHERE id = $2;
             """,
             qr_code_url,
