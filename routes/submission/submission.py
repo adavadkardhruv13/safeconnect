@@ -12,6 +12,7 @@ from models.models import VehicleType, VehicleBrand
 from qrcode import make as make_qr_code
 from PIL import Image
 import cloudinary.uploader
+from io import BytesIO
 
 
 
@@ -61,10 +62,14 @@ async def post_vehicle_data(
             qr_code_image = qr_code.get_image()
             #qr_code_image.save(f"qr_codes/{vehicle_no}.png")
             
+            qr_code_stream = BytesIO()
+            qr_code_image.save(qr_code_stream, format="PNG")  # Save the image to the byte stream
+            qr_code_stream.seek(0)
+            
             # Upload QR code image to Cloudinary
-            upload_result = cloudinary.uploader.upload(qr_code_image, 
+            upload_result = cloudinary.uploader.upload(qr_code_stream, 
                                                    folder="qr_codes", 
-                                                   public_id=vehicle_no)
+                                                   public_id=f"{vehicle_no}_qr_code")
             
             qr_code_url = upload_result["secure_url"]
             

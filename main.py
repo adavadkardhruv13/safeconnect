@@ -4,6 +4,10 @@ from models.db import get_pool, CreateVehicleRegisterationTable
 from routes.submission import submission
 import logging
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 
 cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME")
