@@ -3,6 +3,21 @@ from fastapi.middleware.cors import CORSMiddleware
 from models.db import get_pool, CreateVehicleRegisterationTable
 from routes.submission import submission
 import logging
+import os
+
+
+cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME")
+api_key = os.getenv("CLOUDINARY_API_KEY")
+api_secret = os.getenv("CLOUDINARY_API_SECRET")
+
+# Configure Cloudinary
+import cloudinary.uploader
+cloudinary.config(
+    cloud_name=cloud_name,
+    api_key=api_key,
+    api_secret=api_secret
+)
+
 
 app = FastAPI(
     title="Safeconnect Server",

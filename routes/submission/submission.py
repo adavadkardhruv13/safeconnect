@@ -11,6 +11,8 @@ from fastapi.responses import JSONResponse
 from models.models import VehicleType, VehicleBrand
 from qrcode import make as make_qr_code
 from PIL import Image
+import cloudinary.uploader
+
 
 
 router = APIRouter(
@@ -54,10 +56,27 @@ async def post_vehicle_data(
             result = await connection.fetchval(query, *data)
             
             #generate QRCODE
-            qr_data = f"http://localhost:8000/vehicle/get_vehicle_data/{vehicle_no}"
+            qr_data = f"https://safeconnect-e81248c2d86f.herokuapp.com/vehicle/get_vehicle_data/{vehicle_no}"
             qr_code = make_qr_code(qr_data)
             qr_code_image = qr_code.get_image()
-            qr_code_image.save(f"qr_codes/{vehicle_no}.png")
+            #qr_code_image.save(f"qr_codes/{vehicle_no}.png")
+            
+            # Upload QR code image to Cloudinary
+            upload_result = cloudinary.uploader.upload(qr_code_image, 
+                                                   folder="qr_codes", 
+                                                   public_id=vehicle_no)
+            
+            qr_code_url = upload_result["secure_url"]
+            
+            await connection.execute(
+            """
+            UPDATE vehicle_registration_data
+            SET qrcode_url = $1
+            WHERE id = $2;
+            """,
+            qr_code_url,
+            result,
+        )
             
             # Construct response with inserted vehicle_id
             return JSONResponse(
