@@ -86,7 +86,7 @@ async def post_vehicle_data(
             # Construct response with inserted vehicle_id
             return JSONResponse(
                 status_code=status.HTTP_201_CREATED,
-                content={"message": "Success", "data": {"vehicle_id": result}}
+                content={"message": "Success", "data": {"vehicle_id": result, "qrcode_url": qr_code_url}}
             )
         #except Exception as e:
             # Handle any database-related exceptions
