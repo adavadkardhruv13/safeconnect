@@ -112,3 +112,32 @@ async def get_vehicle_registration_data_by_contact_number(contact_number:int ,po
     
     data = await Modelquery(pool).get_vehicle_registration_data_by_contact_number(contact_number)
     return{"message":"Success","Data":data}
+
+@router.put('/update_vehicle_data/{vehicle_no}', status_code=status.HTTP_200_OK)
+async def update_vehicle_registration_data(
+    owner_name: str,
+    vehicle_type: VehicleType,
+    vehicle_brand: VehicleBrand,
+    vehicle_no: str,
+    email: str,
+    contact_number: str,
+    emergency_number: str,
+    pool: Pool = Depends(get_pool)
+):
+    data = (owner_name, vehicle_type, vehicle_brand, vehicle_no, email, contact_number, emergency_number)
+    
+    async with pool.acquire() as connection:
+        existing_record = await Modelquery(pool).get_vehicle_registration_data(vehicle_no)
+        if not existing_record:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Vehicle with ID {vehicle_no} not found")
+        
+        sql = '''
+                UPDATE vehicle_registration_data
+                SET
+                wner_name, vehicle_type, vehicle_brand,
+                    vehicle_no, email, contact_number, emergency_number
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+                '''
+                
+        await connection.execute(sql, vehicle_no, *data)
+        return JSONResponse(status_code=status.HTTP_200_OK, content={"message": "Vehicle data updated successfully"})
