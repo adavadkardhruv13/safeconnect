@@ -122,22 +122,29 @@ async def update_vehicle_registration_data(
     email: str,
     contact_number: str,
     emergency_number: str,
+    #qrcode_url:str,
     pool: Pool = Depends(get_pool)
 ):
     data = (owner_name, vehicle_type, vehicle_brand, vehicle_no, email, contact_number, emergency_number)
     
     async with pool.acquire() as connection:
-        existing_record = await Modelquery(pool).get_vehicle_registration_data(vehicle_no)
+        existing_record = await Modelquery(pool).get_vehicle_registration_data_by_vehicle_no(vehicle_no)
         if not existing_record:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Vehicle with ID {vehicle_no} not found")
         
         sql = '''
                 UPDATE vehicle_registration_data
-                SET
-                wner_name, vehicle_type, vehicle_brand,
-                    vehicle_no, email, contact_number, emergency_number
-                ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+            SET
+                owner_name = $1,
+                vehicle_type = $2,
+                vehicle_brand = $3,
+                email = $5,
+                contact_number = $6,
+                emergency_number = $7
+            WHERE vehicle_no = $4;
                 '''
                 
-        await connection.execute(sql, vehicle_no, *data)
+        await connection.execute(sql,*data)
+        updated_record = await Modelquery(pool).get_vehicle_registration_data_by_vehicle_no(vehicle_no)
+        qrcode_url = updated_record[0]['qrcode_url']
         return JSONResponse(status_code=status.HTTP_200_OK, content={"message": "Vehicle data updated successfully"})

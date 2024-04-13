@@ -23,7 +23,7 @@ class DatabasePool:
                 password=self.db_params['DB_PASSWORD'],
                 database=self.db_params['DB_NAME'],
                 min_size=5,
-                max_size=12,
+                max_size=22,
             )
             logging.info("PostgreSQL connection pool created successfully")
 

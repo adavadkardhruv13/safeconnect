@@ -31,7 +31,7 @@ class Modelquery:
     async def update_vehicle_registration_data(self, vehicle_no):
         async with self.conn.acquire() as connection:
             async with connection.transaction():
-                query = 'SELECT * FROM vehicle_registration_data WHERE vehicle_no = {vehicle_no};'
+                query = 'SELECT * FROM vehicle_registration_data WHERE vehicle_no = $1;'
                 rows = await connection.fetch(query, vehicle_no)
                 data = [dict(row) for row in rows]
         return data
