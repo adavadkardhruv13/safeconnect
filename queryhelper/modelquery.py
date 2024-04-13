@@ -26,4 +26,13 @@ class Modelquery:
                 rows = await connection.fetch(query, contact_number)
                 data = [dict(row) for row in rows]
         return data
+    
+    
+    async def update_vehicle_registration_data(self, vehicle_no):
+        async with self.conn.acquire() as connection:
+            async with connection.transaction():
+                query = 'SELECT * FROM vehicle_registration_data WHERE vehicle_no = {vehicle_no};'
+                rows = await connection.fetch(query, vehicle_no)
+                data = [dict(row) for row in rows]
+        return data
 
