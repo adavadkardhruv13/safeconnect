@@ -108,7 +108,7 @@ async def get_vehicle_registration_data_by_vehicle_no(vehicle_no:str, pool:Pool 
 
 
 @router.get('/get_vehicle_data/{contact_number}', status_code=status.HTTP_201_CREATED)
-async def get_vehicle_registration_data_by_contact_number(contact_number:int ,pool:Pool = Depends(get_pool)):
+async def get_vehicle_registration_data_by_contact_number(contact_number:str ,pool:Pool = Depends(get_pool)):
     
     data = await Modelquery(pool).get_vehicle_registration_data_by_contact_number(contact_number)
     return{"message":"Success","Data":data}

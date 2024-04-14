@@ -43,7 +43,7 @@ app.include_router(vehicle.router)
 
 # Setup database connection pool on application startup
 @app.on_event("startup")
-async def startup_event():
+async def startup_event(): 
     pool = await get_pool()
     table_creator = CreateVehicleRegisterationTable(pool)
     await table_creator.create_vehicle_registration_table()
