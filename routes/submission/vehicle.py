@@ -18,7 +18,7 @@ from io import BytesIO
 
 router = APIRouter(
     prefix="/vehicle",
-    tags=['Submission']
+    tags=['vehicle']
 )
 
 

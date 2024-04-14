@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from models.db import get_pool, CreateVehicleRegisterationTable
-from routes.submission import submission
+from routes.submission import vehicle
 import logging
 import os
 from dotenv import load_dotenv
@@ -18,7 +18,7 @@ api_secret = os.getenv("CLOUDINARY_API_SECRET")
 import cloudinary.uploader
 cloudinary.config(
     cloud_name=cloud_name,
-    api_key=api_key,
+    api_key=api_key,   
     api_secret=api_secret
 )
 
@@ -36,10 +36,10 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
-)
+)         
 
 # Include routers
-app.include_router(submission.router)
+app.include_router(vehicle.router)
 
 # Setup database connection pool on application startup
 @app.on_event("startup")
