@@ -42,3 +42,26 @@ class CreateVehicleRegisterationTable:
                 # Execute the SQL query to create the table
                 await connection.execute(query)
     
+    
+    
+class CreateDeviceRegisterationTable:
+    def __init__(self, pool: Pool):
+        self.pool = pool
+        
+    async def create_device_record_table(self):
+        async with self.pool.acquire() as connection:
+            async with connection.transaction():
+                
+                query = '''
+                    CREATE TABLE IF NOT EXISTS device_record_data(
+                        id SERIAL PRIMARY KEY,
+                        owner_name VARCHAR(255),
+                        device_type VARCHAR(255),
+                        device_name VARCHAR(255),
+                        email VARCHAR(255),
+                        contact_number VARCHAR(255),
+                        emergency_number VARCHAR(255),
+                        qrcode_url VARCHAR(255)
+                    )'''
+                    
+                await connection.execute(query)

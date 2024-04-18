@@ -35,4 +35,21 @@ class Modelquery:
                 rows = await connection.fetch(query, vehicle_no)
                 data = [dict(row) for row in rows]
         return data
+    
+    async def get_device_registration_data(self):
+        async with self.conn.acquire() as connection:
+            async with connection.transaction():
+                query = 'SELECT * FROM device_record_data;'
+                rows = await connection.fetch(query)
+                data = [dict(row) for row in rows]
+        return data
+    
+    
+    async def get_device_registration_data_by_owner_name(self, owner_name):
+        async with self.conn.acquire() as connection:
+            async with connection.transaction():
+                query = 'SELECT * FROM device_record_data WHERE owner_name = $1;'
+                rows = await connection.fetch(query, owner_name)
+                data = [dict(row) for row in rows]
+        return data
 

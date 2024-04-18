@@ -49,6 +49,15 @@ class VehicleBrand(str, Enum):
     Volvo_Cars_India = 'Volvo Cars India'
     
 
+class DeviceType(str, Enum):
+    Cell_Phone = 'Cell Phone',
+    HeadPhone =  'HeadPhone',
+    EarPone = "EarPone",
+    DigitalWatch = 'Digital Watch',
+    Speaker = 'Speaker',
+    Laptop = 'Laptop',
+    
+
 class VehicleRegistration(BaseModel):
     owner_name : str
     vehicle_type : VehicleType
@@ -57,3 +66,14 @@ class VehicleRegistration(BaseModel):
     email : str
     contact_number : str
     emergency_number : str
+    
+    
+    
+class DeviceRegistration(BaseModel):
+    owner_name : str
+    device_type : DeviceType
+    device_name : str
+    email : str
+    contact_number : str
+    emergency_number : str
+    qrcode_url : str
