@@ -121,3 +121,69 @@ async def get_device_record(owner_name : str, contact_number : str, pool:Pool = 
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No data found for owner_name: {owner_name} and contact number {contact_number}")
     
     return {"message": "Success", "Data": data}
+
+@router.put("/update_device_record/{owner_name}/{contact_number}", status_code=status.HTTP_200_OK)
+async def update_device_record(
+    owner_name: str,
+    contact_number: str,
+    device_type: str,  # Assuming DeviceType is a string type
+    device_name: str,
+    email: str,
+    emergency_number: str,
+    device_image: UploadFile = File(None),
+    pool: Pool = Depends(get_pool)
+):
+    try:
+        # Acquire a connection from the pool
+        async with pool.acquire() as connection:
+            # Begin a transaction to perform multiple operations atomically
+            async with connection.transaction():
+                # Check if the device record exists
+                existing_record = await Modelquery(pool).get_device_registration_data_by_owner_name(owner_name, contact_number)
+                if not existing_record:
+                    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Device record not found")
+
+                # Update device record in the database
+                update_query = '''
+                UPDATE device_record_data
+                SET
+                    device_type = $1,
+                    device_name = $2,
+                    email = $3,
+                    emergency_number = $4
+                WHERE
+                    owner_name = $5 AND contact_number = $6;
+                '''
+                await connection.execute(update_query, device_type, device_name, email, emergency_number, owner_name, contact_number)
+
+                # Upload device image to Cloudinary (if provided)
+                if device_image:
+                    device_image_url = await upload_to_cloudinary(device_image)
+                    if not device_image_url:
+                        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to upload device image")
+
+                    # Update device image URL in the database
+                    await connection.execute(
+                        '''
+                        UPDATE device_record_data
+                        SET device_image_url = $1
+                        WHERE owner_name = $2 AND contact_number = $3;
+                        ''',
+                        device_image_url,
+                        owner_name,
+                        contact_number
+                    )
+
+                # Retrieve updated record to get the new QR code URL
+                updated_record = await Modelquery(pool).get_device_registration_data_by_owner_name(owner_name, contact_number)
+                qrcode_url = updated_record[0]['qrcode_url']
+
+                return JSONResponse(
+                    status_code=status.HTTP_200_OK,
+                    content={"message": "Device data updated successfully", "qrcode_url": qrcode_url}
+                )
+
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to update device: {str(e)}")
