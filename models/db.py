@@ -61,7 +61,9 @@ class CreateDeviceRegisterationTable:
                         email VARCHAR(255),
                         contact_number VARCHAR(255),
                         emergency_number VARCHAR(255),
-                        qrcode_url VARCHAR(255)
+                        qrcode_url VARCHAR(255),
+                        device_image_url VARCHAR(255)
+                        
                     )'''
                     
                 await connection.execute(query)
