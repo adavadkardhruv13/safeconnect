@@ -52,7 +52,7 @@ class VehicleBrand(str, Enum):
 class DeviceType(str, Enum):
     Cell_Phone = 'Cell Phone',
     HeadPhone =  'HeadPhone',
-    EarPone = "EarPone",
+    EarPhone = "EarPhone",
     DigitalWatch = 'Digital Watch',
     Speaker = 'Speaker',
     Laptop = 'Laptop',
