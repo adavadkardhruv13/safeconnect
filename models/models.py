@@ -57,6 +57,13 @@ class DeviceType(str, Enum):
     Speaker = 'Speaker',
     Laptop = 'Laptop',
     
+class PetType(str, Enum):
+    Dog = "Dog",
+    Cat = "Cat",
+    Cow = "Cow",
+    Goat = "Goat"
+    
+    
 
 class VehicleRegistration(BaseModel):
     owner_name : str
@@ -77,3 +84,18 @@ class DeviceRegistration(BaseModel):
     contact_number : str
     emergency_number : str
     qrcode_url : str
+    
+class PetRegistration(BaseModel):
+    pet_name : str
+    owner_name : str
+    date_of_birth : str
+    pet_type : PetType
+    pet_gender : str
+    pet_height : str
+    pet_weight : str
+    pet_breed : str
+    some_distinctive_mark : str
+    contact_number : str
+    emergengy_number : str
+    qrcode_url  : str
+    device_image_url  : str

@@ -67,3 +67,28 @@ class CreateDeviceRegisterationTable:
                     )'''
                     
                 await connection.execute(query)
+                
+                
+class CreatePetregistrationTable:
+    async def create_pet_table(self):
+        async with self.pool.acquire() as connection:
+            async with connection.transaction():
+                
+                query = '''
+                CREATE TABLE IF NOT EXISTS pet_registration_table(
+                    pet_name VARCHAR(255),
+                    owner_name VARCHAR(255),
+                    date_of_birth DATE,
+                    pet_type VARCHAR(255),
+                    pet_gender VARCHAR(255),
+                    pet_height VARCHAR(255),
+                    pet_weight VARCHAR(255),
+                    pet_breed VARCHAR(255),
+                    some_distinctive_mark VARCHAR(255),
+                    contact_number VARCHAR(255),
+                    emergengy_number VARCHAR(255),
+                    qrcode_url VARCHAR(255),
+                    device_image_url VARCHAR(255)
+                )
+                '''
+                await connection.execute(query)
