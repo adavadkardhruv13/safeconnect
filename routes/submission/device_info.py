@@ -126,7 +126,7 @@ async def get_device_record(owner_name : str, contact_number : str, pool:Pool = 
 async def update_device_record(
     owner_name: str,
     contact_number: str,
-    device_type: str,  # Assuming DeviceType is a string type
+    device_type: DeviceType,  # Assuming DeviceType is a string type
     device_name: str,
     email: str,
     emergency_number: str,
