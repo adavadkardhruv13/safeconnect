@@ -70,12 +70,17 @@ class CreateDeviceRegisterationTable:
                 
                 
 class CreatePetregistrationTable:
+    def __init__(self, pool: Pool):
+        self.pool = pool
+        
+        
     async def create_pet_table(self):
         async with self.pool.acquire() as connection:
             async with connection.transaction():
                 
                 query = '''
                 CREATE TABLE IF NOT EXISTS pet_registration_table(
+                    id SERIAL PRIMARY KEY,
                     pet_name VARCHAR(255),
                     owner_name VARCHAR(255),
                     date_of_birth DATE,
