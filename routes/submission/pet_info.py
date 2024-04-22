@@ -113,7 +113,7 @@ async def post_pet_data(
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content={
-                "message": "Device registered successfully",
+                "message": "Pet registered successfully",
                 "data": {
                     "device_id": result,
                     "qrcode_url": qr_code_url,
@@ -143,7 +143,92 @@ async def get_pet_data(pool:Pool = Depends(get_pool)) :
     return{'message':'Success', 'Data':data}
 
 
-@router.get("/get_pet_data_by_pet_name/{pet_name}/{owner_name}", status_code=status.HTTP_200_OK)
+@router.get("/get_pet_data_by_pet_name/{pet_name}/{owner_name}", status_code=status.HTTP_302_FOUND)
 async def get_pet_data(pet_name:str, owner_name, pool:Pool = Depends(get_pool)) :
     data = await Modelquery(pool).get_pet_data_by_pet_name(pet_name, owner_name)
     return{'message':'Success', 'Data':data}
+
+@router.put("/update_pet_data/{pet_name}/{owner_name}", status_code=status.HTTP_200_OK)
+async def update_pet_data(
+    pet_name: str,
+    owner_name: str,
+    date_of_birth: str,
+    pet_type: PetType,  
+    pet_gender: str,
+    pet_height: str,
+    pet_weight: str,
+    pet_breed: str,
+    some_distinctive_mark: str,
+    contact_number: str,
+    emergengy_number: str,
+    device_image_url: UploadFile = File(None),
+    pool: Pool = Depends(get_pool)
+):
+    # Convert date_of_birth to the appropriate format using date_formate_convertion function
+    date_of_birth = date_formate_convertion(date_of_birth)
+    
+    try:
+        async with pool.acquire() as connection:
+            async with connection.transaction():
+                # Check if the pet record exists
+                existing_record = await Modelquery(pool).get_pet_data_by_pet_name(pet_name, owner_name)
+                if not existing_record:
+                    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pet not found")
+                
+                # Prepare the update query
+                update_query = '''
+                    UPDATE pet_registration_table
+                    SET
+                        date_of_birth = $1,
+                        pet_type = $2,
+                        pet_gender = $3,
+                        pet_height = $4,
+                        pet_weight = $5,
+                        pet_breed = $6,
+                        some_distinctive_mark = $7,
+                        contact_number = $8,
+                        emergengy_number = $9
+                    WHERE
+                        pet_name = $10 AND owner_name = $11;
+                '''
+                
+                # Execute the update query with parameters
+                await connection.execute(
+                    update_query,
+                    date_of_birth, pet_type, pet_gender, pet_height, pet_weight, pet_breed,
+                    some_distinctive_mark, contact_number, emergengy_number,
+                    pet_name, owner_name
+                )
+
+                # Update device image URL in the database if a new image is provided
+                if device_image_url:
+                    new_device_image_url = await upload_to_cloudinary(device_image_url)
+                    if not new_device_image_url:
+                        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to upload device image")
+
+                    # Perform the update of device_image_url
+                    await connection.execute(
+                        '''
+                        UPDATE pet_registration_table
+                        SET device_image_url = $1
+                        WHERE pet_name = $2 AND owner_name = $3;
+                        ''',
+                        new_device_image_url,
+                        pet_name,
+                        owner_name
+                    )
+
+                # Retrieve updated record to get the new QR code URL (if needed)
+                updated_record = await Modelquery(pool).get_pet_data_by_pet_name(pet_name, owner_name)
+                qrcode_url = updated_record[0]['qrcode_url']
+
+                # Return success response with updated data
+                return JSONResponse(
+                    status_code=status.HTTP_200_OK,
+                    content={"message": "Pet data updated successfully", "qrcode_url": qrcode_url}
+                )
+
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to update pet: {str(e)}")
