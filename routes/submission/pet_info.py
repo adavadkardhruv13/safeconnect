@@ -79,7 +79,7 @@ async def post_pet_data(
         result = await connection.fetchval(sql, *data)
 
         # Generate QR code and upload to Cloudinary
-        qr_data = f"https://safeconnect-e81248c2d86f.herokuapp.com/pet/get_pet_data/{pet_name}/{owner_name}"
+        qr_data = f"https://safeconnect-e81248c2d86f.herokuapp.com/pet/get_pet_data_by_pet_name/{pet_name}/{owner_name}"
         qr = QRCode(
             version=1,
             error_correction=constants.ERROR_CORRECT_L,
