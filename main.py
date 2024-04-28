@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from models.db import get_pool, CreateVehicleRegisterationTable, CreateDeviceRegisterationTable, CreatePetregistrationTable
-from routes.submission import vehicle, device_info, pet_info
+from models.db import get_pool, CreateVehicleRegisterationTable, CreateDeviceRegisterationTable, CreatePetregistrationTable, CreateChildregistrationTable
+from routes.submission import vehicle, device_info, pet_info, child_info
 import logging
 import os
 from dotenv import load_dotenv
@@ -42,6 +42,7 @@ app.add_middleware(
 app.include_router(vehicle.router)
 app.include_router(device_info.router)
 app.include_router(pet_info.router)
+app.include_router(child_info.router)
 
 # Setup database connection pool on application startup
 @app.on_event("startup")
@@ -56,10 +57,13 @@ async def startup_event():
     
     table_creator = CreatePetregistrationTable(pool)
     await table_creator.create_pet_table()
+    
+    table_creator = CreateChildregistrationTable(pool)
+    await table_creator.create_child_table()
 
 # Close database connection pool on application shutdown
 @app.on_event("shutdown")
-async def shutdown_event():
+async def shutdown_event(): 
     await app.state.pool.close()
     logging.info("Database connection pool closed")
 

@@ -97,3 +97,27 @@ class CreatePetregistrationTable:
                 )
                 '''
                 await connection.execute(query)
+
+
+class CreateChildregistrationTable:
+    def __init__(self, pool: Pool):
+        self.pool = pool
+                
+    async def create_child_table(self):
+        async with self.pool.acquire() as connection:
+            async with connection.transaction():
+                
+                query = '''
+                    CREATE TABLE IF NOT EXISTS child_registration_table(
+                        id SERIAL PRIMARY KEY,
+                        child_name VARCHAR(255),
+                        date_of_birth VARCHAR(255),
+                        father_name VARCHAR(255),
+                        mother_name VARCHAR(255),
+                        email VARCHAR(255),
+                        contact_number VARCHAR(255),
+                        emergency_number VARCHAR(255),
+                        qrcode_url VARCHAR(255)
+                    )'''
+                    
+                await connection.execute(query)

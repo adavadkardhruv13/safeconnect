@@ -99,3 +99,13 @@ class PetRegistration(BaseModel):
     emergengy_number : str
     qrcode_url  : str
     device_image_url  : str
+    
+class ChildRegistration(BaseModel):
+    child_name : str
+    date_of_birth : str
+    father_name : str
+    mother_name : str
+    email : str
+    contact_number : str
+    emergency_number : str
+    qrcode_url  : str
