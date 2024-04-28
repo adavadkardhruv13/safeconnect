@@ -77,6 +77,14 @@ class Modelquery:
                 rows = await connection.fetch(query)
                 data = [dict(row) for row in rows]
         return data
+    
+    async def get_child_data_by_name(self, child_name, father_name):
+        async with self.conn.acquire() as connection:
+            async with connection.transaction():
+                query = 'SELECT * FROM child_registration_table WHERE child_name = $1 AND father_name=$2;'
+                rows = await connection.fetch(query, child_name, father_name )
+                data = [dict(row) for row in rows]
+        return data
                 
                 
 

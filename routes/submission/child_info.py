@@ -71,7 +71,7 @@ async def post_child_data(
         
         result = await connection.fetchval(sql, *data)
         
-        qr_data = f"https://safeconnect-e81248c2d86f.herokuapp.com/"
+        qr_data = f"https://safeconnect-e81248c2d86f.herokuapp.com/child/get_child_data/{child_name}/{father_name}"
         qr = QRCode(
             version=1,
             error_correction=constants.ERROR_CORRECT_L,
@@ -112,3 +112,15 @@ async def post_child_data(
                     }
             }
         )
+        
+        
+@router.get('/get_child_data/{child_name}/{father_name}', status_code=status.HTTP_200_OK)
+async def get_child_data(child_name:str, father_name:str, pool:Pool=Depends(get_pool)):
+    
+    data = await Modelquery(pool).get_child_data_by_name(child_name, father_name)
+    #return{"message":"Success","Data":data}
+    
+    if not data:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No data found for child_name: {child_name} and father name {father_name}")
+    
+    return {"message": "Success", "Data": data}
