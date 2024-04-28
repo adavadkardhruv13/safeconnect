@@ -14,7 +14,7 @@ from PIL import Image
 import cloudinary.uploader
 from io import BytesIO
 from datetime import datetime
-
+from urllib.parse import quote
 
 router = APIRouter(
     prefix="/child",
@@ -69,9 +69,13 @@ async def post_child_data(
         RETURNING id;
         '''
         
+        
         result = await connection.fetchval(sql, *data)
         
-        qr_data = f"https://safeconnect-e81248c2d86f.herokuapp.com/child/get_child_data/{child_name}/{father_name}"
+        encoded_child_name = quote(child_name)
+        encoded_father_name = quote(father_name)
+        
+        qr_data = f"https://safeconnect-e81248c2d86f.herokuapp.com/child/get_child_data/{encoded_child_name}/{encoded_father_name}"
         qr = QRCode(
             version=1,
             error_correction=constants.ERROR_CORRECT_L,
@@ -105,7 +109,7 @@ async def post_child_data(
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content={
-                "message": "Pet registered successfully",
+                "message": "Child registered successfully",
                 "data": {
                     "device_id": result,
                     "qrcode_url": qr_code_url,
