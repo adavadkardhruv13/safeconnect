@@ -5,7 +5,7 @@ import logging
 class DatabasePool:
     def __init__(self):
         self.db_params = {
-            'DB_HOST': 'safeconnectdb.cz02igoma6s8.ap-southeast-2.rds.amazonaws.com',
+            'DB_HOST': 'safeconnect-database.cz02igoma6s8.ap-southeast-2.rds.amazonaws.com',
             'DB_PORT': 5432,  # PostgreSQL default port
             'DB_NAME': 'safeconnect',
             'DB_USER': 'postgres',
