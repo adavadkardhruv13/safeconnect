@@ -72,6 +72,7 @@ async def post_child_data(
         
         result = await connection.fetchval(sql, *data)
         
+        #encoding names to make it compatible for url
         encoded_child_name = quote(child_name)
         encoded_father_name = quote(father_name)
         
