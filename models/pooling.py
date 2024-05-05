@@ -7,7 +7,7 @@ class DatabasePool:
         self.db_params = {
             'DB_HOST': 'safeconnect-database.cz02igoma6s8.ap-southeast-2.rds.amazonaws.com',
             'DB_PORT': 5432,  # PostgreSQL default port
-            'DB_NAME': 'safeconnect',
+            'DB_NAME': 'safeconnect-db',
             'DB_USER': 'postgres',
             'DB_PASSWORD': 'safeconnect',
         }
@@ -23,7 +23,7 @@ class DatabasePool:
                 password=self.db_params['DB_PASSWORD'],
                 database=self.db_params['DB_NAME'],
                 min_size=5,
-                max_size=22,
+                max_size=30,
             )
             logging.info("PostgreSQL connection pool created successfully")
 

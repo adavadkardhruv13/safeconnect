@@ -30,18 +30,16 @@ async def get_vehicle_data(pool:Pool = Depends(get_pool)):
 
 
 @router.post('/post_vehicle_data', status_code=status.HTTP_201_CREATED)
-async def post_vehicle_data(
-    owner_name: str,
-    vehicle_type: VehicleType,
-    vehicle_brand: VehicleBrand,
-    vehicle_no: str,
-    email: str,
-    contact_number: str,
-    emergency_number: str,
-    pool: Pool = Depends(get_pool)
-):
+async def post_vehicle_data(vehicle_data: VehicleRegistration, pool:Pool = Depends(get_pool)):
     # Prepare data for insertion
-    data = (owner_name, vehicle_type, vehicle_brand, vehicle_no, email, contact_number, emergency_number)
+    data = vehicle_data.dict()
+    owner_name = data['owner_name']
+    vehicle_type = data['vehicle_type']
+    vehicle_brand = data['vehicle_brand']
+    vehicle_no = data['vehicle_no']
+    email = data['email']
+    contact_number = data['contact_number']
+    emergency_number = data['emergency_number']
     
     async with pool.acquire() as connection:
         
@@ -54,7 +52,8 @@ async def post_vehicle_data(
                 RETURNING id;
             """
             # Execute the SQL query with data values and fetch the result
-            result = await connection.fetchval(query, *data)
+            result = await connection.fetchval(query, owner_name, vehicle_type, vehicle_brand,
+                vehicle_no, email, contact_number, emergency_number)
             
             #generate QRCODE
             qr_data = f"https://safeconnect-e81248c2d86f.herokuapp.com/vehicle/get_vehicle_data/{vehicle_no}"
