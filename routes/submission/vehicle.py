@@ -117,8 +117,8 @@ async def update_vehicle_registration_data(vehicle_data: VehicleRegistration, po
 ):
     data = vehicle_data.dict()
     owner_name = data['owner_name']
-    #vehicle_type = data['vehicle_type']
-    #vehicle_brand = data['vehicle_brand']
+    vehicle_type = data['vehicle_type']
+    vehicle_brand = data['vehicle_brand']
     vehicle_no = data['vehicle_no']
     email = data['email']
     contact_number = data['contact_number']
@@ -133,13 +133,15 @@ async def update_vehicle_registration_data(vehicle_data: VehicleRegistration, po
                 UPDATE vehicle_registration_data
             SET
                 owner_name = $1,
+                vehicle_type = $2,
+                vehicle_brand = $3,
                 email = $5,
                 contact_number = $6,
                 emergency_number = $7
             WHERE vehicle_no = $4;
                 '''
                 
-        await connection.execute(sql, owner_name, email, contact_number, emergency_number)
+        await connection.execute(sql, owner_name,vehicle_type ,vehicle_brand,vehicle_no, email, contact_number, emergency_number)
         updated_record = await Modelquery(pool).get_vehicle_registration_data_by_vehicle_no(vehicle_no)
         qrcode_url = updated_record[0]['qrcode_url']
         return JSONResponse(status_code=status.HTTP_200_OK, content={"message": "Vehicle data updated successfully"})
