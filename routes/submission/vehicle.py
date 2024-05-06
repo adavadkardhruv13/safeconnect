@@ -113,18 +113,16 @@ async def get_vehicle_registration_data_by_contact_number(contact_number:str ,po
     return{"message":"Success","Data":data}
 
 @router.put('/update_vehicle_data/{vehicle_no}', status_code=status.HTTP_200_OK)
-async def update_vehicle_registration_data(
-    owner_name: str,
-    vehicle_type: VehicleType,
-    vehicle_brand: VehicleBrand,
-    vehicle_no: str,
-    email: str,
-    contact_number: str,
-    emergency_number: str,
-    #qrcode_url:str,
-    pool: Pool = Depends(get_pool)
+async def update_vehicle_registration_data(vehicle_data: VehicleRegistration, pool: Pool = Depends(get_pool)
 ):
-    data = (owner_name, vehicle_type, vehicle_brand, vehicle_no, email, contact_number, emergency_number)
+    data = vehicle_data.dict()
+    owner_name = data['owner_name']
+    #vehicle_type = data['vehicle_type']
+    #vehicle_brand = data['vehicle_brand']
+    vehicle_no = data['vehicle_no']
+    email = data['email']
+    contact_number = data['contact_number']
+    emergency_number = data['emergency_number']
     
     async with pool.acquire() as connection:
         existing_record = await Modelquery(pool).get_vehicle_registration_data_by_vehicle_no(vehicle_no)
@@ -135,15 +133,13 @@ async def update_vehicle_registration_data(
                 UPDATE vehicle_registration_data
             SET
                 owner_name = $1,
-                vehicle_type = $2,
-                vehicle_brand = $3,
                 email = $5,
                 contact_number = $6,
                 emergency_number = $7
             WHERE vehicle_no = $4;
                 '''
                 
-        await connection.execute(sql,*data)
+        await connection.execute(sql, owner_name, email, contact_number, emergency_number)
         updated_record = await Modelquery(pool).get_vehicle_registration_data_by_vehicle_no(vehicle_no)
         qrcode_url = updated_record[0]['qrcode_url']
         return JSONResponse(status_code=status.HTTP_200_OK, content={"message": "Vehicle data updated successfully"})
