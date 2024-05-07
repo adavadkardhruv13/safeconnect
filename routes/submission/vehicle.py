@@ -56,7 +56,7 @@ async def post_vehicle_data(vehicle_data: VehicleRegistration, pool:Pool = Depen
                 vehicle_no, email, contact_number, emergency_number)
             
             #generate QRCODE
-            qr_data = f"https://safeconnect-e81248c2d86f.herokuapp.com/vehicle/get_vehicle_data/{vehicle_no}"
+            qr_data = f"https://safeconnectwebsite.web.app/#/registered_vehicles/{vehicle_no}"
             qr = QRCode(
             version=1,
             error_correction=constants.ERROR_CORRECT_L,
