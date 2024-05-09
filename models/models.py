@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 from enum import Enum
+from typing import Optional
+from datetime import date
 
 class VehicleType(str, Enum):
     Car = 'Car'
@@ -63,7 +65,6 @@ class PetType(str, Enum):
     Cow = "Cow",
     Goat = "Goat"
     
-    
 
 class VehicleRegistration(BaseModel):
     owner_name : str
@@ -88,7 +89,7 @@ class DeviceRegistration(BaseModel):
 class PetRegistration(BaseModel):
     pet_name : str
     owner_name : str
-    date_of_birth : str
+    date_of_birth : date
     pet_type : PetType
     pet_gender : str
     pet_height : str
@@ -97,8 +98,8 @@ class PetRegistration(BaseModel):
     some_distinctive_mark : str
     contact_number : str
     emergengy_number : str
-    qrcode_url  : str
-    device_image_url  : str
+    qrcode_url: Optional[str] = None
+    device_image_url: Optional[str] = None
     
 class ChildRegistration(BaseModel):
     child_name : str
@@ -109,3 +110,20 @@ class ChildRegistration(BaseModel):
     contact_number : str
     emergency_number : str
     qrcode_url  : str
+
+
+class MedicalRegistration(BaseModel):
+    name:str
+    phone_number:str
+    email:str
+    blood_group: str
+    blood_pressure: str
+    blood_pressure_patient:bool
+    sugar_patient:bool
+    allergies: str
+    medications: str
+    organ_donor: Optional[bool] = None
+    medical_note: Optional[str] = None
+    disease: Optional[str] = None
+    immunization: Optional[str] = None
+    qrcode_url:Optional[str] = None

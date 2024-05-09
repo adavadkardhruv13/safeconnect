@@ -121,3 +121,34 @@ class CreateChildregistrationTable:
                     )'''
                     
                 await connection.execute(query)
+                
+
+
+class CreateMedicalregistrationTable:
+    def __init__(self, pool: Pool):
+        self.pool = pool
+                
+    async def create_medical_table(self):
+        async with self.pool.acquire() as connection:
+            async with connection.transaction():
+                
+                query = '''
+                    CREATE TABLE IF NOT EXISTS medical_registration_data(
+                        id SERIAL PRIMARY KEY,
+                        name VARCHAR(255),
+                        phone_number VARCHAR(255),
+                        email VARCHAR(255),
+                        blood_group VARCHAR(255),
+                        blood_pressure VARCHAR(255),
+                        blood_pressure_patient VARCHAR(255),
+                        sugar_patient VARCHAR(255),
+                        allergies VARCHAR(255), 
+                        medications VARCHAR(255),
+                        organ_donor VARCHAR(255),
+                        medical_note VARCHAR(255),
+                        disease VARCHAR(255),
+                        immunization VARCHAR(255),
+                        qrcode_url VARCHAR(255)
+                    )'''
+                     
+                await connection.execute(query)

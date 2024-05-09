@@ -85,6 +85,25 @@ class Modelquery:
                 rows = await connection.fetch(query, child_name, father_name )
                 data = [dict(row) for row in rows]
         return data
+    
+    
+    async def get_medical_data(self):
+        async with self.conn.acquire() as connection:
+            async with connection.transaction():
+                query = 'SELECT * FROM medical_registration_data ;'
+                rows = await connection.fetch(query )
+                data = [dict(row) for row in rows]
+        return data
+    
+    
+    async def get_medical_data_by_name(self, name, phone_number):
+        async with self.conn.acquire() as connection:
+            async with connection.transaction():
+                query = 'SELECT * FROM medical_registration_data WHERE name = $1 AND phone_number=$2 ;'
+                rows = await connection.fetch(query, name, phone_number)
+                data = [dict(row) for row in rows]
+        return data
+    
                 
                 
 
