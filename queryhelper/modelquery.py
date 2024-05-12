@@ -62,11 +62,11 @@ class Modelquery:
         return data
     
     
-    async def get_pet_data_by_pet_name(self, pet_name, owner_name):
+    async def get_pet_data_by_pet_name(self, pet_name, contact_number):
         async with self.conn.acquire() as connection:
             async with connection.transaction():
-                query = 'SELECT * FROM pet_registration_table WHERE pet_name = $1 AND owner_name = $2;'
-                rows = await connection.fetch(query, pet_name, owner_name)
+                query = 'SELECT * FROM pet_registration_table WHERE pet_name = $1 AND contact_number = $2;'
+                rows = await connection.fetch(query, pet_name, contact_number)
                 data = [dict(row) for row in rows]
         return data
     
