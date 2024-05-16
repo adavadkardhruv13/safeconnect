@@ -102,6 +102,8 @@ async def post_medical_data(medical_data: MedicalRegistration, pool:Pool = Depen
 async def get_medical_data( pool:Pool = Depends(get_pool)):
     
     data = await Modelquery(pool).get_medical_data()
+    if not data:
+        return{"message":"details_not_registered"}
     return{"message":"Success","Data":data}
 
 
@@ -109,4 +111,6 @@ async def get_medical_data( pool:Pool = Depends(get_pool)):
 async def get_medical_data_by_name(name:str, phone_number:str, pool:Pool = Depends(get_pool)):
     
     data = await Modelquery(pool).get_medical_data_by_name(name, phone_number)
+    if not data:
+        return{"message":"details_not_registered"}
     return{"message":"Success","Data":data}

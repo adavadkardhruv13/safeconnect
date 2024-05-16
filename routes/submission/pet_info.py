@@ -138,12 +138,19 @@ async def upload_to_cloudinary(file: UploadFile):
 @router.get("/get_pet_data", status_code=status.HTTP_200_OK)
 async def get_pet_data(pool:Pool = Depends(get_pool)) :
     data = await Modelquery(pool).get_pet_data()
+    if not data:
+        return{"message":"pet_not_registered"}
+    
     return{'message':'Success', 'Data':data}
 
 
 @router.get("/get_pet_data_by_pet_name/{pet_name}/{contact_number}", status_code=status.HTTP_302_FOUND)
 async def get_pet_data(pet_name:str, contact_number:str, pool:Pool = Depends(get_pool)) :
     data = await Modelquery(pool).get_pet_data_by_pet_name(pet_name, contact_number)
+    
+    if not data:
+        return{"message":"pet_not_registered"}
+    
     return{'message':'Success', 'Data':data}
 
 @router.put("/update_pet_data/{pet_name}/{owner_name}", status_code=status.HTTP_200_OK)

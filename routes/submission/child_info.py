@@ -22,17 +22,17 @@ router = APIRouter(
 )
 
 
-def date_formate_convertion(date_of_birth_str):
-    try:
-        date_of_birth = datetime.strptime(date_of_birth_str, '%d/%m/%Y')
-    except ValueError:
-        raise ValueError("Invalid date formate")
+#def date_formate_convertion(date_of_birth_str):
+    #try:
+        #date_of_birth = datetime.strptime(date_of_birth_str, '%d/%m/%Y')
+    #except ValueError:
+    #    raise ValueError("Invalid date formate")
     
-    formatted_date = date_of_birth.strftime('%Y-%m-%d')
-    date_of_birth = datetime.strptime(formatted_date, '%Y-%m-%d')
+    #formatted_date = date_of_birth.strftime('%Y-%m-%d')
+    #date_of_birth = datetime.strptime(formatted_date, '%Y-%m-%d')
     
-    date_value = date_of_birth.date()
-    return date_value
+    #date_value = date_of_birth.date()
+    #return date_value
 
 
 @router.get('/get_child_data', status_code=status.HTTP_200_OK)
@@ -42,19 +42,21 @@ async def get_child_data(pool:Pool = Depends(get_pool)):
 
 @router.post('/post_child_data', status_code=status.HTTP_201_CREATED)
 async def post_child_data(
-    child_name : str,
-    date_of_birth : str,
-    father_name : str,
-    mother_name : str,
-    email : str,
-    contact_number : str,
-    emergency_number : str,
+    child_data: ChildRegistration,
     pool:Pool = Depends(get_pool)
 ):
-    date_of_birth = date_formate_convertion(date_of_birth)
+    data = child_data.dict()
+    child_name = data['child_name']
+    date_of_birth = data['date_of_birth']
+    father_name = data['father_name']
+    mother_name = data['mother_name']
+    email = data['email']
+    contact_number = data['contact_number']
+    emergency_number = data['emergency_number']
+    #date_of_birth = date_formate_convertion(date_of_birth)
     
     data=(
-        child_name, str(date_of_birth), father_name, mother_name, email, 
+        child_name, str(date_of_birth) , father_name, mother_name, email, 
         contact_number, emergency_number
     )
     

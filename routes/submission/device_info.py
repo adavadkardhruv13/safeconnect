@@ -25,21 +25,20 @@ router = APIRouter(
 async def get_device_record(pool:Pool = Depends(get_pool)):
     
     data = await Modelquery(pool).get_device_registration_data()
+    if not data:
+        return{"message":"device_not_registered"}
     return{"message":"Success","Data":data}
 
 
 @router.post("/post_device_record", status_code=status.HTTP_201_CREATED)
-async def post_device_record(
-    owner_name: str,
-    device_type: DeviceType,  # Assuming DeviceType is a string type
-    device_name: str,
-    email: str,
-    contact_number: str,
-    emergency_number: str,
-    device_image: UploadFile = File(),
-    pool: Pool = Depends(get_pool)
-):
-    data = (owner_name, device_type, device_name, email, contact_number, emergency_number)
+async def post_device_record(device_data: DeviceRegistration, pool: Pool = Depends(get_pool)):
+    data = device_data.dict()
+    owner_name = data['owner_name']
+    device_type = data['device_type']
+    device_name = data['device_name']
+    email = data['email']
+    contact_number = data['contact_number']
+    emergency_number = data['emergency_number']
 
     async with pool.acquire() as connection:
         # Insert device registration data and retrieve the inserted ID
@@ -51,12 +50,15 @@ async def post_device_record(
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING id;
         '''
-        result = await connection.fetchval(insert_query, *data)
-
-        # Upload device image to Cloudinary
-        device_image_url = await upload_to_cloudinary(device_image)
-        if not device_image_url:
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to upload device image")
+        result = await connection.fetchval(
+            insert_query,
+            str(owner_name),
+            device_type,
+            device_name,
+            email,
+            contact_number,
+            emergency_number
+        )
 
         # Generate QR code and upload to Cloudinary
         qr_data = f"https://safeconnect-e81248c2d86f.herokuapp.com/device/get_device_record/{owner_name}/{contact_number}"
@@ -81,21 +83,20 @@ async def post_device_record(
         )
         qr_code_url = qr_code_upload_result["secure_url"]
 
-        # Update database record with QR code URL and device image URL
+        # Update database record with QR code URL
         update_query = '''
         UPDATE device_record_data
-        SET qrcode_url = $1, device_image_url = $2
-        WHERE id = $3;
+        SET qrcode_url = $1
+        WHERE id = $2;
         '''
-        await connection.execute(update_query, qr_code_url, device_image_url, result)
+        await connection.execute(update_query, qr_code_url, result)
 
         # Return success response with inserted device ID and URLs
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content={"message": "Device registered successfully",
-                    "data": {"device_id": result, "qrcode_url": qr_code_url, "device_image_url": device_image_url}}
+                     "data": {"device_id": result, "qrcode_url": qr_code_url}}
         )
-        
         
 async def upload_to_cloudinary(file: UploadFile):
     try:
@@ -118,21 +119,22 @@ async def get_device_record(owner_name : str, contact_number : str, pool:Pool = 
     #return{"message":"Success","Data":data}
     
     if not data:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No data found for owner_name: {owner_name} and contact number {contact_number}")
+        return{"message":"device_not_registered"}
     
     return {"message": "Success", "Data": data}
 
 @router.put("/update_device_record/{owner_name}/{contact_number}", status_code=status.HTTP_200_OK)
-async def update_device_record(
-    owner_name: str,
-    contact_number: str,
-    device_type: DeviceType,  # Assuming DeviceType is a string type
-    device_name: str,
-    email: str,
-    emergency_number: str,
-    device_image: UploadFile = File(None),
-    pool: Pool = Depends(get_pool)
+async def update_device_record(device_data: DeviceRegistration,pool: Pool = Depends(get_pool)
 ):
+    data = device_data.dict()
+    owner_name = data['owner_name']
+    contact_number= data['contact_number']
+    device_type= data['device_type'],  # Assuming DeviceType is a string type
+    device_name= data['device_name']
+    email= data['email']
+    emergency_number= data['emergency_number']
+    #device_image: UploadFile = File(None),
+    
     try:
         # Acquire a connection from the pool
         async with pool.acquire() as connection:
@@ -157,22 +159,22 @@ async def update_device_record(
                 await connection.execute(update_query, device_type, device_name, email, emergency_number, owner_name, contact_number)
 
                 # Upload device image to Cloudinary (if provided)
-                if device_image:
-                    device_image_url = await upload_to_cloudinary(device_image)
-                    if not device_image_url:
-                        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to upload device image")
+                #if device_image:
+                #    device_image_url = await upload_to_cloudinary(device_image)
+                #    if not device_image_url:
+                #        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to upload device image")
 
                     # Update device image URL in the database
-                    await connection.execute(
-                        '''
-                        UPDATE device_record_data
-                        SET device_image_url = $1
-                        WHERE owner_name = $2 AND contact_number = $3;
-                        ''',
-                        device_image_url,
-                        owner_name,
-                        contact_number
-                    )
+                #    await connection.execute(
+                #        '''
+                #        UPDATE device_record_data
+                #        SET device_image_url = $1
+                #        WHERE owner_name = $2 AND contact_number = $3;
+                #        ''',
+                #        device_image_url,
+                #        owner_name,
+                #        contact_number
+                #    )
 
                 # Retrieve updated record to get the new QR code URL
                 updated_record = await Modelquery(pool).get_device_registration_data_by_owner_name(owner_name, contact_number)

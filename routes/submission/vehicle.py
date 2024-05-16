@@ -26,6 +26,10 @@ router = APIRouter(
 async def get_vehicle_data(pool:Pool = Depends(get_pool)):
     
     data = await Modelquery(pool).get_vehicle_registration_data()
+    
+    if not data:
+        return{"message":"Vehicle_not_registered"}
+    
     return{"message":"Success","Data":data}
 
 
@@ -103,6 +107,10 @@ async def post_vehicle_data(vehicle_data: VehicleRegistration, pool:Pool = Depen
 async def get_vehicle_registration_data_by_vehicle_no(vehicle_no:str, pool:Pool = Depends(get_pool)):
     
     data = await Modelquery(pool).get_vehicle_registration_data_by_vehicle_no(vehicle_no)
+    
+    if not data:
+        return{"message":"Vehicle_not_registered"}
+    
     return{"message":"Success","Data":data}
 
 
@@ -110,6 +118,10 @@ async def get_vehicle_registration_data_by_vehicle_no(vehicle_no:str, pool:Pool 
 async def get_vehicle_registration_data_by_contact_number(contact_number:str ,pool:Pool = Depends(get_pool)):
     
     data = await Modelquery(pool).get_vehicle_registration_data_by_contact_number(contact_number)
+    
+    if not data:
+        return{"message":"Vehicle_not_registered"}
+    
     return{"message":"Success","Data":data}
 
 @router.put('/update_vehicle_data/{vehicle_no}', status_code=status.HTTP_200_OK)
