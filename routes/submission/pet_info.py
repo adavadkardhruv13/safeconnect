@@ -147,23 +147,25 @@ async def get_pet_data(pet_name:str, contact_number:str, pool:Pool = Depends(get
     return{'message':'Success', 'Data':data}
 
 @router.put("/update_pet_data/{pet_name}/{owner_name}", status_code=status.HTTP_200_OK)
-async def update_pet_data(
-    pet_name: str,
-    owner_name: str,
-    date_of_birth: str,
-    pet_type: PetType,  
-    pet_gender: str,
-    pet_height: str,
-    pet_weight: str,
-    pet_breed: str,
-    some_distinctive_mark: str,
-    contact_number: str,
-    emergengy_number: str,
-    device_image_url: UploadFile = File(None),
-    pool: Pool = Depends(get_pool)
-):
+async def update_pet_data(pet_data: PetRegistration, pool: Pool = Depends(get_pool)):
+    
+    data = pet_data.dict()
+    pet_name = data['pet_name'],
+    owner_name = data['owner_name'],
+    date_of_birth = data['date_of_birth'],
+    pet_type = data['pet_type'],  
+    pet_gender = data['pet_gender'],
+    pet_height = data['pet_height'],
+    pet_weight = data['pet_weight'],
+    pet_breed = data['pet_breed'],
+    some_distinctive_mark = data['some_distinctive_mark'],
+    contact_number = data['contact_number'],
+    emergengy_number = data['emergengy_number'],
+    #device_image_url: UploadFile = File(None)
+    
+
     # Convert date_of_birth to the appropriate format using date_formate_convertion function
-    date_of_birth = date_formate_convertion(date_of_birth)
+    #date_of_birth = date_formate_convertion(date_of_birth)
     
     try:
         async with pool.acquire() as connection:
@@ -199,22 +201,22 @@ async def update_pet_data(
                 )
 
                 # Update device image URL in the database if a new image is provided
-                if device_image_url:
-                    new_device_image_url = await upload_to_cloudinary(device_image_url)
-                    if not new_device_image_url:
-                        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to upload device image")
+                #if device_image_url:
+                    #new_device_image_url = await upload_to_cloudinary(device_image_url)
+                    #if not new_device_image_url:
+                        #raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to upload device image")
 
                     # Perform the update of device_image_url
-                    await connection.execute(
-                        '''
-                        UPDATE pet_registration_table
-                        SET device_image_url = $1
-                        WHERE pet_name = $2 AND owner_name = $3;
-                        ''',
-                        new_device_image_url,
-                        pet_name,
-                        owner_name
-                    )
+                    #await connection.execute(
+                        #'''
+                        #UPDATE pet_registration_table
+                        #SET device_image_url = $1
+                        # WHERE pet_name = $2 AND owner_name = $3;
+                        #''',
+                        #new_device_image_url,
+                        #pet_name,
+                        #owner_name
+                    #)
 
                 # Retrieve updated record to get the new QR code URL (if needed)
                 updated_record = await Modelquery(pool).get_pet_data_by_pet_name(pet_name, owner_name)
