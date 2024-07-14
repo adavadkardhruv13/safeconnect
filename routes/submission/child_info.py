@@ -119,8 +119,8 @@ async def post_child_data(
                     }
             }
         )
-        
-        
+
+
 @router.get('/get_child_data/{child_name}/{father_name}', status_code=status.HTTP_200_OK)
 async def get_child_data(child_name:str, father_name:str, pool:Pool=Depends(get_pool)):
     

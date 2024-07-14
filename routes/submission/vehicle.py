@@ -13,7 +13,7 @@ from qrcode import QRCode, constants
 from PIL import Image
 import cloudinary.uploader
 from io import BytesIO
-
+from fastapi.responses import PlainTextResponse
 
 
 router = APIRouter(
@@ -28,7 +28,7 @@ async def get_vehicle_data(pool:Pool = Depends(get_pool)):
     data = await Modelquery(pool).get_vehicle_registration_data()
     
     if not data:
-        return{"message":"Vehicle_not_registered"}
+        return("VEHICLE_NOT_REGISTERED")
     
     return{"message":"Success","Data":data}
 
@@ -109,7 +109,7 @@ async def get_vehicle_registration_data_by_vehicle_no(vehicle_no:str, pool:Pool 
     data = await Modelquery(pool).get_vehicle_registration_data_by_vehicle_no(vehicle_no)
     
     if not data:
-        return{"message":"Vehicle_not_registered"}
+        return{'message': "Vehicle_not_registered"}
     
     return{"message":"Success","Data":data}
 
