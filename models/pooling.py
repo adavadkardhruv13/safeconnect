@@ -5,13 +5,13 @@ import logging
 class DatabasePool:
     def __init__(self):
         self.db_params = {
-            'DB_HOST': 'safeconnect-database.cz02igoma6s8.ap-southeast-2.rds.amazonaws.com',
+            'DB_HOST': 'safeconnect-db.chq8qawwoezh.eu-north-1.rds.amazonaws.com',
             'DB_PORT': 5432,  # PostgreSQL default port
             'DB_NAME': 'safeconnect-db',
             'DB_USER': 'postgres',
-            'DB_PASSWORD': 'safeconnect',
+            'DB_PASSWORD': 'dhruv2003',
         }
-
+    
         self.connection_pool = None  # Initialize connection pool
 
     async def connect(self):
@@ -22,8 +22,8 @@ class DatabasePool:
                 user=self.db_params['DB_USER'],
                 password=self.db_params['DB_PASSWORD'],
                 database=self.db_params['DB_NAME'],
-                min_size=5,
-                max_size=30,
+                #min_size=0,
+                #max_size=300,
             )
             logging.info("PostgreSQL connection pool created successfully")
 
