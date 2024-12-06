@@ -74,6 +74,7 @@ class VehicleRegistration(BaseModel):
     email : str
     contact_number : str
     emergency_number : str
+    qrcode_url : str
     
     
     

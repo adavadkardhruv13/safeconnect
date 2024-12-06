@@ -25,7 +25,7 @@ cloudinary.config(
 
 app = FastAPI(
     title="Safeconnect Server",
-    description="An Application"
+    description="Saving Lives, Retrieving Yours!"
 )
 
 # Configure CORS middleware

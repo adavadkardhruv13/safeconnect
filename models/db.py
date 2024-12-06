@@ -35,7 +35,8 @@ class CreateVehicleRegisterationTable:
                         vehicle_no VARCHAR(255),
                         email VARCHAR(255),
                         contact_number VARCHAR(255) UNIQUE,
-                        emergency_number VARCHAR(255)
+                        emergency_number VARCHAR(255),
+                        qrcode_url VARCHAR(255)
                     )
                 '''
         
