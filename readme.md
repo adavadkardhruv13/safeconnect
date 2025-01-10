@@ -40,7 +40,7 @@ Safeconnekt is a mobile application leveraging QR technology to enhance emergenc
 
 4. Run the development server:
    ```bash
-   python manage.py runserver
+   uvicorn main:app --reload
    ```
 ---
 
