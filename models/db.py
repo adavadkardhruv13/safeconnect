@@ -1,19 +1,18 @@
 import asyncpg
 from asyncpg.pool import Pool
 from fastapi import Depends
-from dotenv import dotenv_values
+from dotenv import load_dotenv
+import os
 
-config = dotenv_values(".env")
+load_dotenv()
 
-
-async def get_pool()->Pool:
+async def get_pool() -> Pool:
     return await asyncpg.create_pool(
-        user = config.get('DB_USER'),
-        password=config.get("DB_PASSWORD"),
-        database=config.get("DB_NAME"),
-        host=config.get("DB_HOST"),
-        port=config.get("DB_PORT"),
-        
+        user=os.getenv('DB_USER'),
+        password=os.getenv('DB_PASSWORD'),
+        database=os.getenv('DB_NAME'),
+        host=os.getenv('DB_HOST'),
+        port=int(os.getenv('DB_PORT')),
     )
     
     
