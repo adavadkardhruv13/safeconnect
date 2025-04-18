@@ -9,8 +9,7 @@ class DatabasePool:
             'DB_PORT': 5432,  # PostgreSQL default port
             'DB_NAME': 'safeconnect-db',
             'DB_USER': 'postgres',
-            'DB_PASSWORD': 
-                ###'dhruv2003',
+            'DB_PASSWORD': 'dhruv2003',
         }
     
         self.connection_pool = None  # Initialize connection pool

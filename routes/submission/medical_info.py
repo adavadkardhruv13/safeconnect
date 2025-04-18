@@ -114,3 +114,47 @@ async def get_medical_data_by_name(name:str, phone_number:str, pool:Pool = Depen
     if not data:
         return{"message":"details_not_registered"}
     return{"message":"Success","Data":data}
+
+@router.put('/update_medical_details/{name}/', status_code=status.HTTP_200_OK)
+async def update_medical_details(medical_data: MedicalRegistration, pool:Pool = Depends(get_pool)):
+    data = medical_data.dict()
+    name=data['name']
+    phone_number = data['phone_number']
+    email = data['email']
+    blood_group = data['blood_group'] 
+    blood_pressure = data['blood_pressure'] 
+    blood_pressure_patient = data['blood_pressure_patient']
+    sugar_patient = data['sugar_patient']
+    allergies = data['allergies'] 
+    medications = data['medications'] 
+    organ_donor = data['organ_donor']
+    medical_note = data['medical_note']
+    disease = data['disease']
+    immunization = data['immunization']
+    
+    async with pool.accquire() as connection:
+        existing_record = await Modelquery(pool).get_medical_data_by_name(name)
+        if not existing_record:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='medical data with {name} not found')
+        
+        sql = '''
+            UPDATE medical_registration_data
+            SET
+            name = $1,
+            phone_number = $2,
+            email = $3,
+            blood_group = $4,
+            blood_pressure = $5,
+            blood_pressure_patient = $6, 
+            sugar_patient = $7,
+            allergies $8,
+            medications = $9,
+            organ_donor = $10,
+            medical_note = $11,
+            disease = $12,
+            immunization = $13
+        '''
+        await connection.execute(sql, name,phone_number,email,blood_group,blood_pressure,blood_pressure_patient,sugar_patient,allergies,medications,organ_donor,medical_note,disease,immunization)
+        updated_record = await Modelquery(pool).get_medical_data_by_name(name)
+        qrcode_url = updated_record[0]['qrcode_url']
+        return JSONResponse(status_code=status.HTTP_200_OK, content={'message': "medical data updated successfully"})
