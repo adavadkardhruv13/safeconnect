@@ -41,7 +41,7 @@ async def post_medical_data(medical_data: MedicalRegistration, pool:Pool = Depen
     medical_note = data['medical_note']
     disease = data['disease']
     immunization = data['immunization']
-    qrcode_url = data['qrcode_url']
+    # qrcode_url = data['qrcode_url']
     
     async with pool.acquire() as connection:
         
@@ -49,17 +49,17 @@ async def post_medical_data(medical_data: MedicalRegistration, pool:Pool = Depen
         INSERT INTO medical_registration_data(
             name, phone_number, email, blood_group, blood_pressure,
             blood_pressure_patient,sugar_patient, allergies, medications,
-            organ_donor, medical_note, disease, immunization, qrcode_url
-            ) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
+            organ_donor, medical_note, disease, immunization
+            ) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
             RETURNING id;
             """
         
         result = await connection.fetchval(query, name, phone_number, email, blood_group, blood_pressure, 
                                         blood_pressure_patient,sugar_patient, allergies, medications,
-                                        organ_donor, medical_note, disease, immunization,qrcode_url)
+                                        organ_donor, medical_note, disease, immunization)
         
          #generate QRCODE
-        qr_data = f"https://safeconnect-e81248c2d86f.herokuapp.com/medical/get/medical_record/{name}"
+        qr_data = f"https://safeconnect-e81248c2d86f.herokuapp.com/medical/get/medical_record/{phone_number}"
         qr = QRCode(
         version=1,
         error_correction=constants.ERROR_CORRECT_L,
@@ -78,7 +78,7 @@ async def post_medical_data(medical_data: MedicalRegistration, pool:Pool = Depen
             # Upload QR code image to Cloudinary
         upload_result = cloudinary.uploader.upload(qr_code_stream, 
                                                    folder="qr_codes", 
-                                                   public_id=f"{name}_qr_code")
+                                                   public_id=f"{phone_number}_qr_code")
             
         qr_code_url = upload_result["secure_url"]
             

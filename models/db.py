@@ -8,11 +8,11 @@ config = dotenv_values(".env")
 
 async def get_pool()->Pool:
     return await asyncpg.create_pool(
-        user = config['DB_USER'],
-        password=config["DB_PASSWORD"],
-        database=config["DB_NAME"],
-        host=config["DB_HOST"],
-        port=config["DB_PORT"],
+        user = config.get('DB_USER'),
+        password=config.get("DB_PASSWORD"),
+        database=config.get("DB_NAME"),
+        host=config.get("DB_HOST"),
+        port=config.get("DB_PORT"),
         
     )
     
@@ -61,9 +61,8 @@ class CreateDeviceRegisterationTable:
                         device_name VARCHAR(255),
                         email VARCHAR(255),
                         contact_number VARCHAR(255),
-                        emergency_number VARCHAR(255),
-                        qrcode_url VARCHAR(255),
-                        device_image_url VARCHAR(255)
+                        emergency_number VARCHAR(255)
+                        
                         
                     )'''
                     
@@ -92,9 +91,8 @@ class CreatePetregistrationTable:
                     pet_breed VARCHAR(255),
                     some_distinctive_mark VARCHAR(255),
                     contact_number VARCHAR(255),
-                    emergengy_number VARCHAR(255),
-                    qrcode_url VARCHAR(255),
-                    device_image_url VARCHAR(255)
+                    emergengy_number VARCHAR(255)
+                    
                 )
                 '''
                 await connection.execute(query)
@@ -117,8 +115,8 @@ class CreateChildregistrationTable:
                         mother_name VARCHAR(255),
                         email VARCHAR(255),
                         contact_number VARCHAR(255),
-                        emergency_number VARCHAR(255),
-                        qrcode_url VARCHAR(255)
+                        emergency_number VARCHAR(255)
+                        
                     )'''
                     
                 await connection.execute(query)
@@ -148,8 +146,8 @@ class CreateMedicalregistrationTable:
                         organ_donor VARCHAR(255),
                         medical_note VARCHAR(255),
                         disease VARCHAR(255),
-                        immunization VARCHAR(255),
-                        qrcode_url VARCHAR(255)
+                        immunization VARCHAR(255)
+                        
                     )'''
                      
                 await connection.execute(query)
