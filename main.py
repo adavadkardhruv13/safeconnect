@@ -74,7 +74,7 @@ async def shutdown_event():
 # Example index endpoint
 @app.get("/")
 async def index(request: Request):
-    return {"message": "Hello, FastAPI!"}
+    return {"message": "Hello, Developers!....\n Can go to docs by adding /docs to the url"}
 
 
 if __name__ == "__main__":

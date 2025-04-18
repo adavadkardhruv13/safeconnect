@@ -77,7 +77,7 @@ async def post_pet_data(pet_data: PetRegistration, pool: Pool = Depends(get_pool
         some_distinctive_mark, contact_number, emergengy_number)
 
         # Generate QR code and upload to Cloudinary
-        qr_data = f"https://safeconnect-e81248c2d86f.herokuapp.com/pet/get_pet_data_by_pet_name/{pet_name}/{contact_number}"
+        qr_data = f"https://safeconnect-6a2t.onrender.com/pet/get_pet_data_by_pet_name/{pet_name}/{contact_number}"
         qr = QRCode(
             version=1,
             error_correction=constants.ERROR_CORRECT_L,

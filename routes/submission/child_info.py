@@ -78,7 +78,7 @@ async def post_child_data(
         encoded_child_name = quote(child_name)
         encoded_father_name = quote(father_name)
         
-        qr_data = f"https://safeconnect-e81248c2d86f.herokuapp.com/child/get_child_data/{encoded_child_name}/{encoded_father_name}"
+        qr_data = f"https://safeconnect-6a2t.onrender.com/child/get_child_data/{encoded_child_name}/{encoded_father_name}"
         qr = QRCode(
             version=1,
             error_correction=constants.ERROR_CORRECT_L,
