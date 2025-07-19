@@ -5,7 +5,7 @@
 <h2>🔍 Preview</h2>
 
 <p align="center">
-  <img src="assets/1.jpeg" alt="Home Screen" height="300px"/>
+  <img src="assets/1.jpeg" alt="Home Screen" height="500px"/>
   <img src="assets/2.png" alt="QR Sticker View" width="45%"/>
 </p>
 <p align="center">
