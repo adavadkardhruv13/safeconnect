@@ -16,10 +16,10 @@
 <!-- Row 2 -->
 <p align="center">
   <img src="assets/3.png" alt="Scan Result Page" height="350px" style="border-radius: 10px; margin: 10px;" />
-  <img src="assets/4.png" alt="Admin Dashboard" height="350px" style="border-radius: 10px; margin: 10px;" />
+  <img src="assets/4.png" alt="Admin Logs" height="350px" style="border-radius: 10px; margin: 10px;" />
 </p>
 <p align="center">
-  <sub>📷 Scan Result Page &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🖥️ Admin Dashboard</sub>
+  <sub>📷 Scan Result Page &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🖥️ Admin Logs</sub>
 </p>
 
 ## 🔐 Key Features
