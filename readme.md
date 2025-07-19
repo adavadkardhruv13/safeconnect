@@ -4,28 +4,22 @@
 
 <h2>🔍 Preview</h2>
 
-<table>
-  <tr>
-    <td align="center">
-      <img src="assets/1.jpeg" alt="Home Screen" width="300"/>
-      <br/><sub>Home Screen</sub>
-    </td>
-    <td align="center">
-      <img src="assets/2.png" alt="QR Sticker View" width="300"/>
-      <br/><sub>QR Sticker View</sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="assets/3.png" alt="Scan Result" width="300"/>
-      <br/><sub>Scan Result Page</sub>
-    </td>
-    <td align="center">
-      <img src="assets/4.png" alt="Admin Dashboard" width="300"/>
-      <br/><sub>Admin Dashboard</sub>
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <img src="assets/1.jpeg" alt="Home Screen" width="45%"/>
+  <img src="assets/2.png" alt="QR Sticker View" width="45%"/>
+</p>
+<p align="center">
+  <sub>🏠 Home Screen &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🔲 QR Sticker View</sub>
+</p>
+
+<p align="center">
+  <img src="assets/3.png" alt="Scan Result Page" width="45%"/>
+  <img src="assets/4.png" alt="Admin Dashboard" width="45%"/>
+</p>
+<p align="center">
+  <sub>📷 Scan Result Page &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🖥️ Admin Dashboard</sub>
+</p>
+
 
 
 ## 🔐 Key Features
