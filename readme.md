@@ -4,6 +4,18 @@
 
 ---
 
+## 🔍 Preview
+
+| Home Screen               | QR Sticker View            |
+|--------------------------|----------------------------|
+| ![Home](assets/1.jpeg)   | ![QR View](assets/2.png)   |
+
+| Scan Result Page          | Admin Logs            |
+|---------------------------|----------------------------|
+| ![Scan Result](assets/3.png) | ![Logs](assets/4.png) |
+
+---
+
 ## 🔐 Key Features
 
 - 📱 **Smart QR Codes**  
