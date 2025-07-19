@@ -2,25 +2,25 @@
 
 **Safeconnekt** is a mobile-first emergency response system that uses QR technology to simplify identification, improve safety, and accelerate recovery during emergencies. From tagging medical info to identifying lost pets or individuals, Safeconnekt helps bridge the critical gap between emergency and response — all with a scan.
 
-<h2>🔍 Preview</h2>
+<h2 align="center">🔍 App Preview</h2>
 
+<!-- Row 1 -->
 <p align="center">
-  <img src="assets/1.jpeg" alt="Home Screen" height="500px"/>
-  <img src="assets/2.png" alt="QR Sticker View" width="45%"/>
+  <img src="assets/1.jpeg" alt="Home Screen" height="350px" style="border-radius: 10px; margin: 10px;" />
+  <img src="assets/2.png" alt="QR Sticker View" height="350px" style="border-radius: 10px; margin: 10px;" />
 </p>
 <p align="center">
   <sub>🏠 Home Screen &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🔲 QR Sticker View</sub>
 </p>
 
+<!-- Row 2 -->
 <p align="center">
-  <img src="assets/3.png" alt="Scan Result Page" width="45%"/>
-  <img src="assets/4.png" alt="Admin Dashboard" width="45%"/>
+  <img src="assets/3.png" alt="Scan Result Page" height="350px" style="border-radius: 10px; margin: 10px;" />
+  <img src="assets/4.png" alt="Admin Dashboard" height="350px" style="border-radius: 10px; margin: 10px;" />
 </p>
 <p align="center">
   <sub>📷 Scan Result Page &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🖥️ Admin Dashboard</sub>
 </p>
-
-
 
 ## 🔐 Key Features
 
