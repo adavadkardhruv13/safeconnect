@@ -2,7 +2,7 @@
 
 **Safeconnekt** is a mobile-first emergency response system that uses QR technology to simplify identification, improve safety, and accelerate recovery during emergencies. From tagging medical info to identifying lost pets or individuals, Safeconnekt helps bridge the critical gap between emergency and response — all with a scan.
 
-<h2 align="center">🔍 App Preview</h2>
+ ## 🔍 App Preview</h2>
 
 <!-- Row 1 -->
 <p align="center">
